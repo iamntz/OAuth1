@@ -87,8 +87,13 @@ class WP_REST_OAuth1 {
 		return null;
 	}
 
+	private function is_form_urlencoded()
+	{
+		return isset($_SERVER['CONTENT_TYPE']) && strpos( $_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded' ) === 0;
+	}
+
 	public function get_parameters( $require_token = true, $extra = array() ) {
-		if ( strpos( $_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded' ) === 0 ) {
+		if ($this->is_form_urlencoded()) {
 			$params = array_merge( $_GET, $_POST );
 		} else {
 			$params = array_merge( $_GET );
@@ -651,7 +656,7 @@ class WP_REST_OAuth1 {
 
 			case 'POST':
 			case 'PUT':
-				if ( strpos( $_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded' ) === 0 ) {
+				if ($this->is_form_urlencoded()) {
 					$params = wp_unslash( $_POST );
 				} else {
 					$params = array();
